@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DAL.Repositories
 {
-    public class ClientRepo : BaseRepo, IRepo<Client>
+    public class ClientRepo : BaseRepo, IRepository<Client>
     {
 
         public ClientRepo(FlowerShopDbContext context) : base(context)

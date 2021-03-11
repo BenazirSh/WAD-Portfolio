@@ -1,4 +1,4 @@
-﻿@model CW7924.Models.Client
+﻿@model CW7924.DAL.Client
 
 @{
     ViewData["Title"] = "Create";
@@ -23,9 +23,9 @@
                 <span asp-validation-for="LastName" class="text-danger"></span>
             </div>
             <div class="form-group">
-             
+
                 <label asp-for="Gender" class="control-label"></label>
-                <select asp-for="Gender" class="form-control" asp-items="Html.GetEnumSelectList<Gender>()"></select>
+                <select asp-for="Gender" class="form-control" asp-items="Html.GetEnumSelectList<CW7924.DAL.Gender>()"></select>
                 <span asp-validation-for="Gender" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -35,7 +35,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="PlantID" class="control-label"></label>
-                <select asp-for="PlantID" class ="form-control" asp-items="ViewBag.PlantID "></select>
+                <select asp-for="PlantID" class="form-control" asp-items="ViewBag.PlantID "></select>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

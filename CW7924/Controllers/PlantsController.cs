@@ -7,22 +7,24 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using CW7924.DAL;
 using CW7924.Models;
+using DAL.Repositories;
 
 namespace CW7924.Controllers
 {
+    // one thing I did was that I copy pasted DAL.dll to debug/bin because firstly it said there is no .dll file. I will show you where I included 
     public class PlantsController : Controller
     {
-        private readonly FlowerShopDbContext _context;
+        private readonly IRepository<Plant> _plantRepo;
 
-        public PlantsController(FlowerShopDbContext context)
+        public PlantsController(IRepository<Plant> plantRepo)
         {
-            _context = context;
+            _plantRepo = plantRepo;
         }
 
         // GET: Plants
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Plants.ToListAsync());
+            return View(await _plantRepo.GetAll());
         }
 
         // GET: Plants/Details/5
@@ -33,8 +35,8 @@ namespace CW7924.Controllers
                 return NotFound();
             }
 
-            var plant = await _context.Plants
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var plant = await _plantRepo.GetById(id.Value);
+
             if (plant == null)
             {
                 return NotFound();
@@ -58,9 +60,8 @@ namespace CW7924.Controllers
         {
             if (ModelState.IsValid)
             {
-               
-                _context.Add(plant);
-                await _context.SaveChangesAsync();
+                // _context.Add(plant);
+                await _plantRepo.CreateAsync(plant);
                 return RedirectToAction(nameof(Index));
             }
             return View(plant);
@@ -74,7 +75,7 @@ namespace CW7924.Controllers
                 return NotFound();
             }
 
-            var plant = await _context.Plants.FindAsync(id);
+            var plant = await _plantRepo.GetById(id.Value);
             if (plant == null)
             {
                 return NotFound();
@@ -98,8 +99,7 @@ namespace CW7924.Controllers
             {
                 try
                 {
-                    _context.Update(plant);
-                    await _context.SaveChangesAsync();
+                    await _plantRepo.UpdateAsync(plant);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -125,8 +125,7 @@ namespace CW7924.Controllers
                 return NotFound();
             }
 
-            var plant = await _context.Plants
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var plant = await _plantRepo.GetById(id.Value);
             if (plant == null)
             {
                 return NotFound();
@@ -140,15 +139,13 @@ namespace CW7924.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var plant = await _context.Plants.FindAsync(id);
-            _context.Plants.Remove(plant);
-            await _context.SaveChangesAsync();
+            await _plantRepo.DeleteAsync(id);
             return RedirectToAction(nameof(Index));
         }
 
         private bool PlantExists(int id)
         {
-            return _context.Plants.Any(e => e.Id == id);
+            return _plantRepo.Exists(id);
         }
     }
 }

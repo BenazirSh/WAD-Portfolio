@@ -1,4 +1,5 @@
 using CW7924.DAL;
+using DAL.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -25,6 +26,8 @@ namespace CW7924
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddScoped<IRepository<Client>, ClientRepo>();
+            services.AddScoped<IRepository<Plant>, PlantRepo>();
             services.AddControllersWithViews();
             services.AddDbContext<FlowerShopDbContext>(
                 options => options.UseSqlServer(

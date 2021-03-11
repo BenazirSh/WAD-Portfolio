@@ -1,4 +1,4 @@
-﻿using CW7924.DAL.DBO;
+﻿using CW7924.DAL;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
