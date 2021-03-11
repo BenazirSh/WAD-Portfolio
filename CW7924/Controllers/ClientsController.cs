@@ -7,22 +7,25 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using CW7924.DAL;
 using CW7924.Models;
+using DAL.Repositories;
 
 namespace CW7924.Controllers
 {
     public class ClientsController : Controller
     {
-        private readonly FlowerShopDbContext _context;
+        private readonly IRepository<Client> _clientRepo;
+        private readonly IRepository<Plant> _plantRepo;
 
-        public ClientsController(FlowerShopDbContext context)
+        public ClientsController(IRepository<Client> clientRepo, IRepository<Plant> plantRepo)
         {
-            _context = context;
+            _clientRepo = clientRepo;
+            _plantRepo = plantRepo;
         }
 
         // GET: Clients
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Clients.ToListAsync());
+            return View(await _clientRepo.GetAll());
         }
 
         // GET: Clients/Details/5
@@ -33,8 +36,8 @@ namespace CW7924.Controllers
                 return NotFound();
             }
 
-            var client = await _context.Clients
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var client = await _clientRepo.GetById(id.Value);
+
             if (client == null)
             {
                 return NotFound();
@@ -44,9 +47,9 @@ namespace CW7924.Controllers
         }
 
         // GET: Clients/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["PlantID"] = new SelectList(_context.Plants, "Id", "PlantName");
+            ViewData["PlantID"] = new SelectList(await _plantRepo.GetAll(), "Id", "PlantName");
             return View();
         }
 
@@ -59,8 +62,8 @@ namespace CW7924.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(client);
-                await _context.SaveChangesAsync();
+
+                await _clientRepo.CreateAsync(client);
                 return RedirectToAction(nameof(Index));
             }
             return View(client);
@@ -74,7 +77,7 @@ namespace CW7924.Controllers
                 return NotFound();
             }
 
-            var client = await _context.Clients.FindAsync(id);
+            var client = await _clientRepo.GetById(id.Value);
             if (client == null)
             {
                 return NotFound();
@@ -98,8 +101,7 @@ namespace CW7924.Controllers
             {
                 try
                 {
-                    _context.Update(client);
-                    await _context.SaveChangesAsync();
+                    await _clientRepo.UpdateAsync(client);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -125,8 +127,7 @@ namespace CW7924.Controllers
                 return NotFound();
             }
 
-            var client = await _context.Clients
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var client = await _clientRepo.GetById(id.Value);
             if (client == null)
             {
                 return NotFound();
@@ -140,15 +141,13 @@ namespace CW7924.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var client = await _context.Clients.FindAsync(id);
-            _context.Clients.Remove(client);
-            await _context.SaveChangesAsync();
+            await _clientRepo.DeleteAsync(id);
             return RedirectToAction(nameof(Index));
         }
 
         private bool ClientExists(int id)
         {
-            return _context.Clients.Any(e => e.Id == id);
+            return _clientRepo.Exists(id);
         }
     }
 }

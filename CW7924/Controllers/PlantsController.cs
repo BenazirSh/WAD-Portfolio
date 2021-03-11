@@ -58,6 +58,7 @@ namespace CW7924.Controllers
         {
             if (ModelState.IsValid)
             {
+               
                 _context.Add(plant);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

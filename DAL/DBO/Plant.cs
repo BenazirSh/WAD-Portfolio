@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CW7924.Models
+namespace CW7924.DAL
 {
     public class Plant
     {
@@ -26,7 +26,7 @@ namespace CW7924.Models
         Flower,
         Bush,
         Tree
-      
+
     }
 
 }

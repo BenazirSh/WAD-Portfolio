@@ -1,7 +1,8 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace CW7924.Migrations
+namespace DAL.Migrations
+
 {
     public partial class fdb : Migration
     {

@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CW7924.Models
+namespace CW7924.DAL
 {
     public class Client
     {
@@ -22,7 +22,7 @@ namespace CW7924.Models
         public string LastName { get; set; }
 
         [Required]
-        public Gender Gender{ get; set; }
+        public Gender Gender { get; set; }
 
         [Required]
         [Display(Name = "Date of Birth")]
