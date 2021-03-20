@@ -26,8 +26,8 @@ namespace CW7924
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddScoped<IRepository<Client>, ClientRepo>();
-            services.AddScoped<IRepository<Plant>, PlantRepo>();
+            services.AddScoped<IRepo<Client>, ClientRepo>();
+            services.AddScoped<IRepo<Plant>, PlantRepo>();
             services.AddControllersWithViews();
             services.AddDbContext<FlowerShopDbContext>(
                 options => options.UseSqlServer(

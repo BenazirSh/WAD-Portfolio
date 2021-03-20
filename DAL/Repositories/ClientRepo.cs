@@ -30,7 +30,6 @@ namespace DAL.Repositories
 
         public bool Exists(int id)
         {
-
             return _context.Clients.Any(m => m.Id == id);
         }
 

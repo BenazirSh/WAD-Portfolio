@@ -2,6 +2,41 @@
 @{
     ViewData["Title"] = "Home Page";
 }
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular-route.min.js"></script>
+<script type="text/javascript">
+    angular.module('FlowerShopSPA', ['ngRoute'])
+        .config(function ($routeProvider) {
+            $routeProvider
+                .when('/',
+                    {
+                        templateUrl: 'pages/index.html',
+                        controller: 'IndexController'
+                    })
+                .when('/plants',
+                    {
+                        templateUrl: 'pages/plant.html',
+                        controller: 'PlantController'
+                    })
+                .otherwise({
+                    redirectTo: '/'
+                });
+            
+        }).controller('IndexController', ['$scope', '$http', function ($scope, $http) {
+
+            $scope.message = "Florange Flower Shop";
+        }])
+        .controller('PlantController', ['$scope', '$http', function ($scope, $http) {
+
+            $scope.plants = [];
+            $http.get('@Url.Action("GetPlants", "Plants")')
+                .then(function (response) {
+                    $scope.plants = response.data;
+                })
+
+        }]);
+
+    </script>
 
 <p>Use this page to detail your site's privacy policy.</p>
 

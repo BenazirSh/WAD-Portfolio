@@ -14,9 +14,9 @@ namespace CW7924.Controllers
     // one thing I did was that I copy pasted DAL.dll to debug/bin because firstly it said there is no .dll file. I will show you where I included 
     public class PlantsController : Controller
     {
-        private readonly IRepository<Plant> _plantRepo;
+        private readonly IRepo<Plant> _plantRepo;
 
-        public PlantsController(IRepository<Plant> plantRepo)
+        public PlantsController(IRepo<Plant> plantRepo)
         {
             _plantRepo = plantRepo;
         }

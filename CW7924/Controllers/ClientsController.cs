@@ -13,10 +13,10 @@ namespace CW7924.Controllers
 {
     public class ClientsController : Controller
     {
-        private readonly IRepository<Client> _clientRepo;
-        private readonly IRepository<Plant> _plantRepo;
+        private readonly IRepo<Client> _clientRepo;
+        private readonly IRepo<Plant> _plantRepo;
 
-        public ClientsController(IRepository<Client> clientRepo, IRepository<Plant> plantRepo)
+        public ClientsController(IRepo<Client> clientRepo, IRepo<Plant> plantRepo)
         {
             _clientRepo = clientRepo;
             _plantRepo = plantRepo;
