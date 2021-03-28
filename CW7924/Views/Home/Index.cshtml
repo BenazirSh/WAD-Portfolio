@@ -1,7 +1,12 @@
-﻿@model IEnumerable<CW7924.Models.Plant>
+﻿@model IEnumerable<CW7924.DAL.Client>
 @{
     ViewData["Title"] = "Home Page";
 }
+<div ng-app="FlowerShopSPA">
+    <div ng-view>
+
+    </div>
+</div>
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular-route.min.js"></script>
 <script type="text/javascript">
@@ -13,10 +18,10 @@
                         templateUrl: 'pages/index.html',
                         controller: 'IndexController'
                     })
-                .when('/plants',
+                .when('/clients',
                     {
-                        templateUrl: 'pages/plant.html',
-                        controller: 'PlantController'
+                        templateUrl: 'pages/clients.html',
+                        controller: 'ClientsController'
                     })
                 .otherwise({
                     redirectTo: '/'
@@ -24,14 +29,14 @@
             
         }).controller('IndexController', ['$scope', '$http', function ($scope, $http) {
 
-            $scope.message = "Florange Flower Shop";
+            $scope.message = "Florange Flower Shop checking SPA";
         }])
-        .controller('PlantController', ['$scope', '$http', function ($scope, $http) {
+        .controller('ClientController', ['$scope', '$http', function ($scope, $http) {
 
-            $scope.plants = [];
-            $http.get('@Url.Action("GetPlants", "Plants")')
+            $scope.clients = [];
+            $http.get('@Url.Action("GetClients", "Clients")')
                 .then(function (response) {
-                    $scope.plants = response.data;
+                    $scope.clients = response.data;
                 })
 
         }]);
