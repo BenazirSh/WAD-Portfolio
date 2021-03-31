@@ -20,11 +20,18 @@ namespace CW7924.Controllers
             _context = context;
         }
 
-        // GET: api/Client
+     /*   // GET: api/Client
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Client>>> GetClients()
         {
             return await _context.Clients.ToListAsync();
+        } */
+
+        // GET: api/Client
+        [HttpGet]
+        public IEnumerable<Client> GetClients()
+        {
+            return  _context.Clients.Include("Plant");
         }
 
         // GET: api/Client/5

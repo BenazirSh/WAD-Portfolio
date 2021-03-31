@@ -21,12 +21,17 @@
                 .when('/clients',
                     {
                         templateUrl: 'pages/clients.html',
-                        controller: 'ClientsController'
+                        controller: 'ClientController'
+                    })
+                .when('/plants',
+                    {
+                        templateUrl: 'pages/plants.html',
+                        controller: 'PlantController'
                     })
                 .otherwise({
                     redirectTo: '/'
                 });
-            
+
         }).controller('IndexController', ['$scope', '$http', function ($scope, $http) {
 
             $scope.message = "Florange Flower Shop checking SPA";
@@ -34,14 +39,23 @@
         .controller('ClientController', ['$scope', '$http', function ($scope, $http) {
 
             $scope.clients = [];
-            $http.get('@Url.Action("GetClients", "Clients")')
+            $http.get('@Url.Action("GetClients", "Client")')
                 .then(function (response) {
                     $scope.clients = response.data;
                 })
 
+        }])
+         .controller('PlantController', ['$scope', '$http', function ($scope, $http) {
+
+            $scope.plants = [];
+            $http.get('@Url.Action("GetPlants", "Plant")')
+                .then(function (response) {
+                    $scope.plants  = response.data;
+                })
+
         }]);
 
-    </script>
+</script>
 
 <p>Use this page to detail your site's privacy policy.</p>
 
