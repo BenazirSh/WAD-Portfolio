@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CW7924.DAL;
+using DAL.DTO;
+using System.Web.Http.Description;
 
 namespace CW7924.Controllers
 {
@@ -22,24 +24,47 @@ namespace CW7924.Controllers
 
         // GET: api/Plant
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Plant>>> GetPlants()
+        public async Task<ActionResult<List<PlantDTO>>> GetPlants()
         {
-            return await _context.Plants.ToListAsync();
+
+            var plants = from b in _context.Plants
+                        select new PlantDTO()
+                        {
+                            Id = b.Id,
+                            PlantName = b.PlantName,
+                            PlantCategory = b.PlantType.ToString()
+                        };
+
+            return await plants.ToListAsync();
+          //  return await _context.Plants.ToListAsync();
         }
 
         // GET: api/Plant/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Plant>> GetPlant(int id)
+        [ResponseType(typeof(PlantDTO))]
+        public async Task<ActionResult<PlantDTO>> GetPlant(int id)
         {
-            var plant = await _context.Plants.FindAsync(id);
+          //  var plant = await _context.Plants.FindAsync(id);
+
+         var plant = await _context.Plants.Include(b => b.PlantType).Select(b =>
+     new PlantDTO()
+     {
+         Id = b.Id,
+         PlantCategory = b.PlantType.ToString()
+
+
+     }).SingleOrDefaultAsync(b => b.Id == id);
+
 
             if (plant == null)
             {
                 return NotFound();
             }
 
-            return plant;
+            return Ok(plant);
         }
+
+   
 
         // PUT: api/Plant/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754

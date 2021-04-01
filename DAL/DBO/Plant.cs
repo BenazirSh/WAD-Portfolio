@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Converters;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -22,6 +23,8 @@ namespace CW7924.DAL
        [JsonIgnore]
         public virtual ICollection<Client> Clients { get; set; }
     }
+
+    //[JsonConverter(typeof(StringEnumConverter))]
     public enum PlantType
     {
         Flower,
