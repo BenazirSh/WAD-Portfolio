@@ -28,6 +28,26 @@
                         templateUrl: 'pages/plants.html',
                         controller: 'PlantController'
                     })
+                .when('/addClient',
+                    {
+                        templateUrl: 'pages/addEditClient.html',
+                        controller: 'AddClientController'
+                    })
+                .when('/editClient/:clientId',
+                    {
+                        templateUrl: 'pages/addEditClient.html',
+                        controller: 'EditClientController'
+                    })
+                .when('/addPlant',
+                    {
+                        templateUrl: 'pages/addEditPlant.html',
+                        controller: 'AddPlantController'
+                    })
+                .when('/editPlant/:plantId',
+                    {
+                        templateUrl: 'pages/addEditPlant.html',
+                        controller: 'EditPlantController'
+                    })
                 .otherwise({
                     redirectTo: '/'
                 });
@@ -45,13 +65,100 @@
                 })
 
         }])
+        .controller('AddClientController', ['$scope', '$http', '$location', function ($scope, $http, $location) {
+
+            $scope.client = {
+                id: 0,
+                name: ''
+            };
+
+
+            $http.get('@Url.Action("GetClients", "Client")/' + $routeParams.clientId)
+                .then(function (response) {
+                    $scope.clients = response.data;
+                })
+
+
+            $scope.SaveClient() = function()
+            {
+                $http.post('@Url.Action("PostClient", "Client")', $scope.client)
+            .then(function (response) {
+                        $location.path('/clients');
+                    })
+            }
+
+        }])
+            .controller('EditClientController', ['$scope', '$http', '$location', '$routeParams', function ($scope, $http, $location, $routeParams) {
+
+            $scope.client = {
+                id: 0,
+                name: ''
+            };
+
+            $scope.SaveClient() = function()
+            {
+                $http.post('@Url.Action("PostClient", "Client")', $scope.client)
+                    .then(function (response) {
+                        $location.path('/clients');
+                    })
+            }
+
+            }])
+
          .controller('PlantController', ['$scope', '$http', function ($scope, $http) {
 
             $scope.plants = [];
-            $http.get('@Url.Action("GetPlants", "Plant")')
+             $http.get('@Url.Action("GetPlants", "Plant")')
+                 .then(function (response) {
+                     $scope.plants = response.data;
+                 });
+
+             $scope.Delete = function (plant) {
+                 $http.delete('@Url.Action("GetPlants", "Plants")/' + plant.id).then(function (response) {
+                     var index = $scope.plants.indexOf(plant);
+                     $scope.plants.splice(index, 1);
+                 });
+             }
+
+         }])
+        .controller('AddPlantController', ['$scope', '$http', '$location', function ($scope, $http, $location) {
+
+            $scope.plant = {
+                id: 0,
+                name: '',
+                type: ''
+            };
+        /* $scope.options = type.reduce(function (memo, obj) {
+                return angular.extend(memo, obj);
+            }, {}); */
+            $scope.SavePlant() = function()
+            {
+                $http.post('@Url.Action("PostPlant", "Plants")', $scope.plant)
+                    .then(function (response) {
+                        $location.path('/plants');
+                    })
+            }
+
+        }])
+        .controller('EditPlantController', ['$scope', '$http', '$location', '$routeParams', function ($scope, $http, $location, $routeParams) {
+
+            $scope.plant = {
+                id: 0,
+                name: '',
+                type: ''
+            };
+               $http.get('@Url.Action("GetPlants", "Plant")/' + $routeParams.plantId)
                 .then(function (response) {
-                    $scope.plants  = response.data;
+                    $scope.plant = response.data;
                 })
+
+            $scope.SavePlant = function()
+            {
+                $http.put('@Url.Action("PutPlant", "Plants")/' + $routeParams.plantId, $scope.plant)
+                    .then(function (response) {
+                        $location.path('/plants');
+                    })
+            }
 
         }]);
 

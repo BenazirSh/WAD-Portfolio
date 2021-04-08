@@ -35,7 +35,7 @@ namespace DAL.Repositories
 
         public async Task<List<Client>> GetAll()
         {
-            return await _context.Clients.Include(p => p.PlantID).ToListAsync();
+            return await _context.Clients.Include(p => p.Plant).ToListAsync();
         }
 
         public async Task<Client> GetById(int id)

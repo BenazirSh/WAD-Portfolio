@@ -1,9 +1,15 @@
-﻿<table class="table">
+﻿<a href="#!/addPlant">Create a new plant</a>
+<table class="table">
     <tbody>
         <tr ng-repeat="plant in plants">
             <td> {{plant.plantName}} </td>
             <td>{{plant.plantCategory}}</td>
-           
+            <td>
+                <a href="#!/editPlant/{{plant.id}}">Edit</a>
+            </td>
+            <td>
+                <a ng-click="Delete(plant)">Delete</a>
+            </td>
         </tr>
     </tbody>
 </table>

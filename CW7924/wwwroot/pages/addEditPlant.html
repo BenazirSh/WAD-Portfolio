@@ -1,0 +1,23 @@
+﻿<div class="row">
+    <div class="col-md-4">
+           
+            <div class="form-group">
+                <label asp-for="PlantName" class="control-label"></label>
+                <input ng-model="plant.plantName" placeholder="plant name" type="text"/>
+  
+             
+            </div>
+            <div class="form-group">
+                <label asp-for="PlantType" class="control-label"></label>
+                <select ng-model="plant.plantCategory" class="form-control" ng-options="Html.GetEnumSelectList< CW7924.DAL.PlantType>()">
+                    <option>Flower</option>
+                    <option>Bush</option>
+                    <option>Tree</option>
+                </select>
+             
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" ng-click="SavePlant()"/>
+            </div>
+    </div>
+</div>

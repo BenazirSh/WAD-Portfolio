@@ -6,70 +6,45 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CW7924.DAL;
-using DAL.DTO;
-using System.Web.Http.Description;
 
 namespace CW7924.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PlantController : ControllerBase
+    public class AddPlantController : ControllerBase
     {
         private readonly FlowerShopDbContext _context;
 
-        public PlantController(FlowerShopDbContext context)
+        public AddPlantController(FlowerShopDbContext context)
         {
             _context = context;
         }
 
-        // GET: api/Plant
+        // GET: api/AddPlant
         [HttpGet]
-        public async Task<ActionResult<List<PlantDTO>>> GetPlants()
+        public async Task<ActionResult<IEnumerable<Plant>>> GetPlants()
         {
-
-            var plants = from b in _context.Plants
-                        select new PlantDTO()
-                        {
-                            Id = b.Id,
-                            PlantName = b.PlantName,
-                            PlantCategory = b.PlantType.ToString()
-                        };
-
-            return await plants.ToListAsync();
-          //  return await _context.Plants.ToListAsync();
+            return await _context.Plants.ToListAsync();
         }
 
-        // GET: api/Plant/5
+        // GET: api/AddPlant/5
         [HttpGet("{id}")]
-        [ResponseType(typeof(PlantDTO))]
-        public async Task<ActionResult<PlantDTO>> GetPlant(int id)
+        public async Task<ActionResult<Plant>> GetPlant(int id)
         {
-          //  var plant = await _context.Plants.FindAsync(id);
-
-         var plant = await _context.Plants.Include(b => b.PlantType).Select(b =>
-     new PlantDTO()
-     {
-         Id = b.Id,
-         PlantCategory = b.PlantType.ToString()
-
-
-     }).SingleOrDefaultAsync(b => b.Id == id);
-
+            var plant = await _context.Plants.FindAsync(id);
 
             if (plant == null)
             {
                 return NotFound();
             }
 
-            return Ok(plant);
+            return plant;
         }
 
-   
-
-        // PUT: api/Plant/5
+        // PUT: api/AddPlant/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutPlant([FromRoute] int id, [FromBody]  Plant plant)
+        public async Task<IActionResult> PutPlant(int id, Plant plant)
         {
             if (id != plant.Id)
             {
@@ -97,7 +72,7 @@ namespace CW7924.Controllers
             return NoContent();
         }
 
-        // POST: api/Plant
+        // POST: api/AddPlant
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<Plant>> PostPlant(Plant plant)
@@ -108,7 +83,7 @@ namespace CW7924.Controllers
             return CreatedAtAction("GetPlant", new { id = plant.Id }, plant);
         }
 
-        // DELETE: api/Plant/5
+        // DELETE: api/AddPlant/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePlant(int id)
         {
