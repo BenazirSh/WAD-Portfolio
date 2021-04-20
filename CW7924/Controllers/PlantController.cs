@@ -119,7 +119,7 @@ namespace CW7924.Controllers
                 await _plantRepo.DeleteAsync(id);
             }catch(Exception ex)
             {
-                throw new Exception("Client bined to this plant");
+                throw new Exception("Client is binded to this plant");
             }
             
 

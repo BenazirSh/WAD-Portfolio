@@ -11,7 +11,7 @@ using DAL.DTO;
 
 namespace CW7924.Controllers
 {
-    // one thing I did was that I copy pasted DAL.dll to debug/bin because firstly it said there is no .dll file. 
+   
     public class PlantsController : Controller
     {
         private readonly IRepo<Plant> _plantRepo;
