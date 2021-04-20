@@ -11,7 +11,7 @@ namespace CW7924.DAL
     {
         public FlowerShopDbContext(DbContextOptions<FlowerShopDbContext> options) : base(options)
         {
-            Database.EnsureCreated();
+           
         }
         public virtual DbSet<Client> Clients { get; set; }
         public virtual DbSet<Plant> Plants { get; set; }

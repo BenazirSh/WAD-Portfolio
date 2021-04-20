@@ -5,7 +5,12 @@
         <tr ng-repeat="client in clients">
             <td>{{client.firstName}}</td>
             <td>{{client.lastName}}</td>
+            <td>{{client.genderType}}</td>
+            <td>{{client.dateOfBirth}}</td>
             <td>{{client.plant.plantName}}</td>
+            <td>
+                <a href="#!/clients" ng-click="Delete(client)">Delete</a>
+            </td>
         </tr>
     </tbody>
 </table>

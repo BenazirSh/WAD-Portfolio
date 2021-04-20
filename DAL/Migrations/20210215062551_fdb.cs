@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DAL.Migrations
-
 {
     public partial class fdb : Migration
     {

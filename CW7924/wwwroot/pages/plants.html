@@ -1,6 +1,8 @@
 ﻿<a href="#!/addPlant">Create a new plant</a>
+<p style="color: red">{{ error }}</p>
 <table class="table">
     <tbody>
+       
         <tr ng-repeat="plant in plants">
             <td> {{plant.plantName}} </td>
             <td>{{plant.plantCategory}}</td>
@@ -13,4 +15,3 @@
         </tr>
     </tbody>
 </table>
-

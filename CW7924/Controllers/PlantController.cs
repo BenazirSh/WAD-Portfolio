@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CW7924.DAL;
 using DAL.DTO;
 using System.Web.Http.Description;
+using DAL.Repositories;
+using System.Linq;
 
 namespace CW7924.Controllers
 {
@@ -15,28 +15,29 @@ namespace CW7924.Controllers
     [ApiController]
     public class PlantController : ControllerBase
     {
-        private readonly FlowerShopDbContext _context;
+       private readonly IRepo<Plant> _plantRepo;
+      
+  
 
-        public PlantController(FlowerShopDbContext context)
+        public PlantController(IRepo<Plant> plantRepo)
         {
-            _context = context;
+            _plantRepo = plantRepo;
+           
+         
         }
-
         // GET: api/Plant
         [HttpGet]
-        public async Task<ActionResult<List<PlantDTO>>> GetPlants()
+        public async Task<ActionResult<List<Plant>>> GetPlants()
         {
-
-            var plants = from b in _context.Plants
-                        select new PlantDTO()
-                        {
-                            Id = b.Id,
-                            PlantName = b.PlantName,
-                            PlantCategory = b.PlantType.ToString()
-                        };
-
-            return await plants.ToListAsync();
-          //  return await _context.Plants.ToListAsync();
+            var plants = await _plantRepo.GetAll();
+            return Ok(plants.Select(b => new PlantDTO {
+                Id = b.Id,
+                PlantName = b.PlantName,
+                PlantCategory = b.PlantType.ToString()
+            }));
+          
+         
+          
         }
 
         // GET: api/Plant/5
@@ -44,16 +45,9 @@ namespace CW7924.Controllers
         [ResponseType(typeof(PlantDTO))]
         public async Task<ActionResult<PlantDTO>> GetPlant(int id)
         {
-          //  var plant = await _context.Plants.FindAsync(id);
+      
 
-         var plant = await _context.Plants.Include(b => b.PlantType).Select(b =>
-     new PlantDTO()
-     {
-         Id = b.Id,
-         PlantCategory = b.PlantType.ToString()
-
-
-     }).SingleOrDefaultAsync(b => b.Id == id);
+            var plant = await _plantRepo.GetById(id);
 
 
             if (plant == null)
@@ -64,23 +58,22 @@ namespace CW7924.Controllers
             return Ok(plant);
         }
 
-   
+
 
         // PUT: api/Plant/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutPlant([FromRoute] int id, [FromBody]  Plant plant)
+        public async Task<IActionResult> PutPlant([FromRoute] int id, [FromBody] Plant plant)
         {
             if (id != plant.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(plant).State = EntityState.Modified;
 
             try
             {
-                await _context.SaveChangesAsync();
+                await _plantRepo.UpdateAsync(plant);
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -102,8 +95,12 @@ namespace CW7924.Controllers
         [HttpPost]
         public async Task<ActionResult<Plant>> PostPlant(Plant plant)
         {
-            _context.Plants.Add(plant);
-            await _context.SaveChangesAsync();
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            await _plantRepo.CreateAsync(plant);
 
             return CreatedAtAction("GetPlant", new { id = plant.Id }, plant);
         }
@@ -112,21 +109,26 @@ namespace CW7924.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePlant(int id)
         {
-            var plant = await _context.Plants.FindAsync(id);
+            var plant = await _plantRepo.GetById(id);
             if (plant == null)
             {
                 return NotFound();
             }
-
-            _context.Plants.Remove(plant);
-            await _context.SaveChangesAsync();
+            try
+            {
+                await _plantRepo.DeleteAsync(id);
+            }catch(Exception ex)
+            {
+                throw new Exception("Client bined to this plant");
+            }
+            
 
             return NoContent();
         }
 
         private bool PlantExists(int id)
         {
-            return _context.Plants.Any(e => e.Id == id);
+            return _plantRepo.Exists(id);
         }
     }
 }

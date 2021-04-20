@@ -56,31 +56,41 @@
 
             $scope.message = "Florange Flower Shop checking SPA";
         }])
+
         .controller('ClientController', ['$scope', '$http', function ($scope, $http) {
 
             $scope.clients = [];
             $http.get('@Url.Action("GetClients", "Client")')
                 .then(function (response) {
                     $scope.clients = response.data;
-                })
+                });
+             $scope.Delete = function (client) {
+                 $http.delete('@Url.Action("GetClients", "Client")/' + client.id).then(function (response) {
+                     var index = $scope.clients.indexOf(client);
+                     $scope.clients.splice(index, 1);
+                 });
+             }
 
         }])
         .controller('AddClientController', ['$scope', '$http', '$location', function ($scope, $http, $location) {
 
             $scope.client = {
                 id: 0,
-                name: ''
+                firstName: '',
+                lastName: '',
+
+
             };
+             $scope.plants = [];
+             $http.get('@Url.Action("GetPlants", "Plant")')
+                 .then(function (response) {
+                     $scope.plants = response.data;
+                 });
 
 
-            $http.get('@Url.Action("GetClients", "Client")/' + $routeParams.clientId)
-                .then(function (response) {
-                    $scope.clients = response.data;
-                })
-
-
-            $scope.SaveClient() = function()
+            $scope.SaveClient = function()
             {
+                console.log($scope.client);
                 $http.post('@Url.Action("PostClient", "Client")', $scope.client)
             .then(function (response) {
                         $location.path('/clients');
@@ -107,33 +117,44 @@
 
          .controller('PlantController', ['$scope', '$http', function ($scope, $http) {
 
-            $scope.plants = [];
+             $scope.plants = [];
+             $scope.error = "";
              $http.get('@Url.Action("GetPlants", "Plant")')
                  .then(function (response) {
                      $scope.plants = response.data;
                  });
 
              $scope.Delete = function (plant) {
-                 $http.delete('@Url.Action("GetPlants", "Plants")/' + plant.id).then(function (response) {
-                     var index = $scope.plants.indexOf(plant);
-                     $scope.plants.splice(index, 1);
-                 });
+                 $http.delete('@Url.Action("GetPlants", "Plant")/' + plant.id)
+                        .then(function (response) {
+                             var index = $scope.plants.indexOf(plant);
+
+                             $scope.plants.splice(index, 1);
+                        }).catch(r => {
+                            $scope.error = "Client is connected to this plant!";
+                        console.log(r);
+                        });
              }
 
          }])
         .controller('AddPlantController', ['$scope', '$http', '$location', function ($scope, $http, $location) {
 
+            $scope.plants = [];
             $scope.plant = {
                 id: 0,
                 name: '',
                 type: ''
             };
+             $http.get('@Url.Action("GetPlants", "Plant")')
+                .then(function (response) {
+                    $scope.plants = response.data;
+                })
         /* $scope.options = type.reduce(function (memo, obj) {
                 return angular.extend(memo, obj);
             }, {}); */
-            $scope.SavePlant() = function()
+            $scope.SavePlant = function()
             {
-                $http.post('@Url.Action("PostPlant", "Plants")', $scope.plant)
+                $http.post('@Url.Action("PostPlant", "Plant")', $scope.plant)
                     .then(function (response) {
                         $location.path('/plants');
                     })
@@ -152,9 +173,14 @@
                     $scope.plant = response.data;
                 })
 
+             $http.get('@Url.Action("GetPlants", "Plant")')
+                .then(function (response) {
+                    $scope.plants = response.data;
+                })
+
             $scope.SavePlant = function()
             {
-                $http.put('@Url.Action("PutPlant", "Plants")/' + $routeParams.plantId, $scope.plant)
+                $http.put('api/Plant/' + $routeParams.plantId, $scope.plant)
                     .then(function (response) {
                         $location.path('/plants');
                     })

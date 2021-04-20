@@ -3,22 +3,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using CW7924.DAL;
 using CW7924.Models;
 using DAL.Repositories;
+using DAL.DTO;
 
 namespace CW7924.Controllers
 {
-    // one thing I did was that I copy pasted DAL.dll to debug/bin because firstly it said there is no .dll file. I will show you where I included 
+    // one thing I did was that I copy pasted DAL.dll to debug/bin because firstly it said there is no .dll file. 
     public class PlantsController : Controller
     {
         private readonly IRepo<Plant> _plantRepo;
-
+ 
         public PlantsController(IRepo<Plant> plantRepo)
         {
             _plantRepo = plantRepo;
+      
         }
 
         // GET: Plants

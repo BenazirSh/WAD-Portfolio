@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Converters;
+﻿using DAL.DBO;
+using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -8,10 +9,8 @@ using System.Threading.Tasks;
 
 namespace CW7924.DAL
 {
-    public class Plant
+    public class Plant : IBaseDBO
     {
-        [Required]
-        [Range(0, int.MaxValue)]
         public int Id { get; set; }
 
         [Display(Name = "Plant Name")]

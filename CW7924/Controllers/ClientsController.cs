@@ -6,8 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using CW7924.DAL;
-using CW7924.Models;
 using DAL.Repositories;
+using DAL.DTO;
 
 namespace CW7924.Controllers
 {
@@ -28,7 +28,7 @@ namespace CW7924.Controllers
             return View(await _clientRepo.GetAll());
         }
 
-       public async Task<List<Client>> GetClients()
+        public async Task<List<Client>> GetClients()
         {
             return await _clientRepo.GetAll();
         }

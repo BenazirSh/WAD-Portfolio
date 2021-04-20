@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CW7924.DAL;
+using DAL.DTO;
+using DAL.Repositories;
 
 namespace CW7924.Controllers
 {
@@ -13,32 +15,38 @@ namespace CW7924.Controllers
     [ApiController]
     public class ClientController : ControllerBase
     {
-        private readonly FlowerShopDbContext _context;
-
-        public ClientController(FlowerShopDbContext context)
+        private readonly IRepo<Client> _clientRepo;
+     
+        public ClientController(IRepo<Client> clientRepo)
         {
-            _context = context;
+            _clientRepo = clientRepo;
+           
         }
-
-     /*   // GET: api/Client
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Client>>> GetClients()
-        {
-            return await _context.Clients.ToListAsync();
-        } */
 
         // GET: api/Client
         [HttpGet]
-        public IEnumerable<Client> GetClients()
+        public async Task<ActionResult<List<ClientDTO>>> GetClients()
         {
-            return  _context.Clients.Include("Plant");
+
+            var clients = await _clientRepo.GetAll();
+            return Ok(clients.Select(b => new ClientDTO
+            {
+                Id = b.Id,
+                FirstName = b.FirstName,
+                LastName = b.LastName,
+                GenderType = b.Gender.ToString(),
+                DateOfBirth = b.DateOfBirth,
+                PlantID = b.PlantID,
+                Plant = b.Plant
+
+            }));
         }
 
         // GET: api/Client/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Client>> GetClient(int id)
         {
-            var client = await _context.Clients.FindAsync(id);
+            var client = await _clientRepo.GetById(id);
 
             if (client == null)
             {
@@ -58,11 +66,11 @@ namespace CW7924.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(client).State = EntityState.Modified;
+       
 
             try
             {
-                await _context.SaveChangesAsync();
+                await _clientRepo.UpdateAsync(client);
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -84,8 +92,13 @@ namespace CW7924.Controllers
         [HttpPost]
         public async Task<ActionResult<Client>> PostClient(Client client)
         {
-            _context.Clients.Add(client);
-            await _context.SaveChangesAsync();
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            await _clientRepo.UpdateAsync(client);
 
             return CreatedAtAction("GetClient", new { id = client.Id }, client);
         }
@@ -94,21 +107,20 @@ namespace CW7924.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteClient(int id)
         {
-            var client = await _context.Clients.FindAsync(id);
-            if (client == null)
+            var plant = await _clientRepo.GetById(id);
+            if (plant == null)
             {
                 return NotFound();
             }
 
-            _context.Clients.Remove(client);
-            await _context.SaveChangesAsync();
+            await _clientRepo.DeleteAsync(id);
 
             return NoContent();
         }
 
         private bool ClientExists(int id)
         {
-            return _context.Clients.Any(e => e.Id == id);
+            return _clientRepo.Exists(id);
         }
     }
 }

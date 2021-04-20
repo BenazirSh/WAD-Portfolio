@@ -8,28 +8,24 @@ using System.Threading.Tasks;
 
 namespace DAL.Repositories
 {
-    public class PlantRepo : BaseRepo, IRepo<Plant>
+    public class PlantRepo : BaseRepo<Plant>, IRepo<Plant>
     {
         public PlantRepo(FlowerShopDbContext context) : base(context)
         {
 
         }
-
-        public Task Create(Plant entity)
+        public async Task<List<Plant>> GetAll()
         {
-            throw new NotImplementedException();
+            return await _context.Plants.ToListAsync();
         }
 
-        public async Task CreateAsync(Plant entity)
+        public async Task<Plant> GetById(int id)
         {
-            _context.Add(entity);
-            await _context.SaveChangesAsync();
+            return await _context.Plants.FirstOrDefaultAsync(m => m.Id == id);
         }
 
-        public Task Delete(int id)
-        {
-            throw new NotImplementedException();
-        }
+      
+     
 
         public async Task DeleteAsync(int id)
         {
@@ -43,26 +39,10 @@ namespace DAL.Repositories
             return _context.Plants.Any(m => m.Id == id);
         }
 
+     
 
-        public async Task<List<Plant>> GetAll()
-        {
-            return await _context.Plants.ToListAsync();
-        }
+        
 
-        public async Task<Plant> GetById(int id)
-        {
-            return await _context.Plants.FirstOrDefaultAsync(m => m.Id == id);
-        }
-
-        public Task Update(Plant entity)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task UpdateAsync(Plant entity)
-        {
-            _context.Update(entity);
-            await _context.SaveChangesAsync();
-        }
+     
     }
 }

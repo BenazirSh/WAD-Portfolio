@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using DAL.DBO;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -7,9 +8,8 @@ using System.Threading.Tasks;
 
 namespace CW7924.DAL
 {
-    public class Client
+    public class Client : IBaseDBO
     {
-        [Range(0, int.MaxValue)]
         public int Id { get; set; }
 
         [MinLength(2)]
@@ -34,6 +34,8 @@ namespace CW7924.DAL
 
         public Plant Plant { get; set; }
 
+  
+    
     }
     public enum Gender
     {

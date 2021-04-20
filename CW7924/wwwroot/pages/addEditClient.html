@@ -8,43 +8,34 @@
 
         </div>
         <div class="form-group">
-            <label for="LastName" class="control-label"></label>
+            <label for="Last Name" class="control-label"></label>
             <input ng-model="client.lastName" placeholder="Last Name" type="text" />
 
         </div>
         <div class="form-group">
-            <label for="FirstName" class="control-label"></label>
-            <input ng-model="client.firstName" placeholder="Date of Birth" type="text" />
-
+            <label for="Gender" class="control-label"></label>
+            <select ng-model="client.genderType" class="form-control">
+                <option value="0">Male</option>
+                <option value="1">Female</option>
+                <option value="2">Unknown</option>
+            </select>
+              
+         
         </div>
         <div class="form-group">
-            <label for="FirstName" class="control-label"></label>
-            <input ng-model="client.firstName" placeholder="First Name" type="text" />
-
+            <label for="DoB" class="control-label"></label>
+            <input ng-model="client.dateOfBirth" placeholder="Date of Birth" type="date" />
         </div>
-        <!--  <div class="form-group">
-        <label asp-for="LastName" class="control-label"></label>
-        <input asp-for="LastName" class="form-control" />
-        <span asp-validation-for="LastName" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-
-        <label asp-for="Gender" class="control-label"></label>
-        <select asp-for="Gender" class="form-control" asp-items="Html.GetEnumSelectList<CW7924.DAL.Gender>()"></select>
-        <span asp-validation-for="Gender" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="DateOfBirth" class="control-label"></label>
-        <input asp-for="DateOfBirth" class="form-control" />
-        <span asp-validation-for="DateOfBirth" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="PlantID" class="control-label"></label>
-        <select asp-for="PlantID" class="form-control" asp-items="ViewBag.PlantID "></select>
-    </div> -->
         <div class="form-group">
-            <input type="submit" value="Save" class="btn btn-primary" ng-click="SaveDepartment()" />
+            <label for="PlantID" class="control-label"></label>
+            <!-- <input asp-for="PlantID" class="form-control" asp-items="ViewBag.PlantName"/> -->
+            <select ng-model="client.plantId" type="number" ng-options="plant.id as plant.plantName for plant in plants">
+                
+            </select>
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Save" class="btn btn-primary" ng-click="SaveClient()" />
         </div>
 
     </div>
-</div>>
+</div>

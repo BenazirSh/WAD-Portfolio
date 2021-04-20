@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DAL.DBO;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,8 +13,9 @@ namespace DAL.Repositories
         Task UpdateAsync(T entity);
         Task DeleteAsync(int id);
         Task<T> GetById(int id);
-        Task<List<T>> GetAll();
+        Task<List<T>> GetAll(); 
         Boolean Exists(int id);
 
     }
 }
+
